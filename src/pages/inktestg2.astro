@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import InkReveal2 from "../components/InkReveals/InkReveal2";
+---
+
+<Layout title="Ink Reveal 2">
+  <main style="position: relative; z-index: 10; font-family: sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; color: white;">
+    <InkReveal2 client:only="react" />
+    <h1 style="font-size: 5rem; text-align: center; font-weight: bold;">
+      INK REVEAL 2<br/><span style="font-size: 2rem;">Fluid in Oil</span>
+    </h1>
+  </main>
+</Layout>
