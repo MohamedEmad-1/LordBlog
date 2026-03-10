@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useThemeInkColors } from './themeInkColors';
 
 interface ColorRGB {
   r: number;
@@ -6,54 +7,50 @@ interface ColorRGB {
   b: number;
 }
 
-interface Pointer {
-  id: number;
-  texcoordX: number;
-  texcoordY: number;
-  prevTexcoordX: number;
-  prevTexcoordY: number;
-  deltaX: number;
-  deltaY: number;
-  down: boolean;
-  moved: boolean;
-  color: ColorRGB;
-}
-
-function pointerPrototype(): Pointer {
-  return {
-    id: -1,
-    texcoordX: 0,
-    texcoordY: 0,
-    prevTexcoordX: 0,
-    prevTexcoordY: 0,
-    deltaX: 0,
-    deltaY: 0,
-    down: false,
-    moved: false,
-    color: { r: 1, g: 1, b: 1 } // Forced white dye internally
-  };
-}
-
 export default function InkReveal3() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isComplete, setIsComplete] = useState(false);
+  const [isMobilePortrait, setIsMobilePortrait] = useState(false);
+  const { startVec3, inkVec3, inkHex } = useThemeInkColors();
 
   // Hardcoded constants for optimal smoke reveal
   const SIM_RESOLUTION = 128;
   const DYE_RESOLUTION = 1024;
-  const DENSITY_DISSIPATION = 0.2; // Slow dissipation allows it to fill
-  const VELOCITY_DISSIPATION = 0.8;
-  const PRESSURE = 0.1;
+  const DENSITY_DISSIPATION = 0.0;
+  const VELOCITY_DISSIPATION = 0.0;
+  const PRESSURE = 0.2;
   const PRESSURE_ITERATIONS = 20;
-  const CURL = 15.0; // High curl for smoke
-  const SPLAT_RADIUS = 0.4;
+  const CURL = 20.0; // High curl for smoke
+  const SPLAT_RADIUS = 0.8;
   const SPLAT_FORCE = 6000;
   const SHADING = false;
 
+  // Sequence timing controls (seconds). Edit these to tune reveal pacing.
+  const WAIT_AFTER_LEFT = 0.5;
+  const WAIT_AFTER_TOP_LEFT = 0.5;
+  const SHARED_BURST_DURATION = 0.9;
+  const SHARED_WOBBLE = 0.05;
+  const SHARED_FORCE_X = 80.0;
+  const SHARED_FORCE_Y = 25.0;
+
   useEffect(() => {
+    const updateOrientation = () => {
+      setIsMobilePortrait(window.innerHeight > window.innerWidth);
+    };
+    updateOrientation();
+    window.addEventListener('resize', updateOrientation);
+    window.addEventListener('orientationchange', updateOrientation);
+    return () => {
+      window.removeEventListener('resize', updateOrientation);
+      window.removeEventListener('orientationchange', updateOrientation);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isComplete) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
-
-    let pointers: Pointer[] = [pointerPrototype()];
 
     let config = {
       SIM_RESOLUTION,
@@ -241,13 +238,15 @@ export default function InkReveal3() {
     // MODIFIED FOR BLACK ON WHITE RENDERING
     const displayShaderSource = `
       precision highp float; precision highp sampler2D;
-      varying vec2 vUv; uniform sampler2D uTexture;
+      varying vec2 vUv;
+      uniform sampler2D uTexture;
+      uniform vec3 uStartColor;
+      uniform vec3 uInkColor;
       void main () {
           vec3 c = texture2D(uTexture, vUv).rgb;
           float density = max(c.r, max(c.g, c.b));
-          
-          // Pure white background. The closer to 1 density is, the blacker the smoke.
-          vec3 finalColor = mix(vec3(1.0), vec3(0.0), clamp(density, 0.0, 1.0));
+
+          vec3 finalColor = mix(uStartColor, uInkColor, clamp(density, 0.0, 1.0));
           gl_FragColor = vec4(finalColor, 1.0);
       }
     `;
@@ -431,37 +430,116 @@ export default function InkReveal3() {
     let lastUpdateTime = Date.now();
     let startTime = Date.now();
     let animFrame: number;
+    let lastCoverageCheckMs = 0;
+    let coveragePasses = 0;
+    const MIN_RUNTIME_BEFORE_SWITCH_SECONDS = 4.5;
+    const COVERAGE_CHECK_EVERY_MS = 200;
+    const REQUIRED_COVERAGE_PASSES = 4;
+    const INK_RATIO_THRESHOLD = 0.992;
+    const targetR = Math.round(inkVec3[0] * 255);
+    const targetG = Math.round(inkVec3[1] * 255);
+    const targetB = Math.round(inkVec3[2] * 255);
+    const CHANNEL_TOLERANCE = 14;
 
-    // Hardcode all white internally to render as pure black on the reversed shader
-    function generateColor() { return { r: 1, g: 1, b: 1 }; }
+    const LEFT_INJECT_AT = 0.0;
+    const TOP_LEFT_INJECT_AT = LEFT_INJECT_AT + SHARED_BURST_DURATION + WAIT_AFTER_LEFT;
+    const BOTTOM_LEFT_INJECT_AT = TOP_LEFT_INJECT_AT + SHARED_BURST_DURATION + WAIT_AFTER_TOP_LEFT;
+
+    const probeCanvas = document.createElement('canvas');
+    probeCanvas.width = 64;
+    probeCanvas.height = 36;
+    const probeCtx = probeCanvas.getContext('2d', { willReadFrequently: true });
+
+    function isFrameFullyBlackEnough() {
+      if (!probeCtx || !canvasRef.current) return false;
+
+      probeCtx.drawImage(canvasRef.current, 0, 0, probeCanvas.width, probeCanvas.height);
+      const pixels = probeCtx.getImageData(0, 0, probeCanvas.width, probeCanvas.height).data;
+      let inkPixels = 0;
+      const pixelCount = probeCanvas.width * probeCanvas.height;
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        const r = pixels[i];
+        const g = pixels[i + 1];
+        const b = pixels[i + 2];
+        if (
+          Math.abs(r - targetR) <= CHANNEL_TOLERANCE &&
+          Math.abs(g - targetG) <= CHANNEL_TOLERANCE &&
+          Math.abs(b - targetB) <= CHANNEL_TOLERANCE
+        ) {
+          inkPixels++;
+        }
+      }
+
+      return inkPixels / pixelCount >= INK_RATIO_THRESHOLD;
+    }
+
+    function emitBurst(
+      elapsed: number,
+      startAt: number,
+      duration: number,
+      x: number,
+      y: number,
+      dx: number,
+      dy: number,
+      wobble: number
+    ) {
+      if (elapsed < startAt || elapsed > startAt + duration) return;
+
+      const t = (elapsed - startAt) / duration;
+      const envelope = Math.pow(Math.sin(Math.PI * t), 1.15);
+      const jitter = Math.sin((elapsed - startAt) * 18.0) * wobble;
+      const forceScale = 0.45 + 0.55 * envelope;
+
+      // Two close splats per frame create a denser fluid plume like the old behavior.
+      splat(x, y + jitter, dx * forceScale, dy * forceScale, { r: 1, g: 1, b: 1 });
+      splat(x, y - jitter * 0.5, dx * forceScale * 0.8, dy * forceScale * 0.8, { r: 1, g: 1, b: 1 });
+    }
+
+    function injectSequence(elapsed: number) {
+      if (isMobilePortrait) {
+        // Mobile portrait: all three bursts start from top and push down.
+        emitBurst(elapsed, LEFT_INJECT_AT, SHARED_BURST_DURATION, 0.2, 0.94, SHARED_FORCE_Y, -SHARED_FORCE_X, SHARED_WOBBLE);
+        emitBurst(elapsed, TOP_LEFT_INJECT_AT, SHARED_BURST_DURATION, 0.5, 0.94, 0.0, -SHARED_FORCE_X, SHARED_WOBBLE);
+        emitBurst(elapsed, BOTTOM_LEFT_INJECT_AT, SHARED_BURST_DURATION, 0.8, 0.94, -SHARED_FORCE_Y, -SHARED_FORCE_X, SHARED_WOBBLE);
+        return;
+      }
+
+      // 1) Left syringe-like burst.
+      emitBurst(elapsed, LEFT_INJECT_AT, SHARED_BURST_DURATION, 0.05, 0.5, SHARED_FORCE_X, 0.0, SHARED_WOBBLE);
+
+      // 2) Top-left inward/downward burst.
+      emitBurst(elapsed, TOP_LEFT_INJECT_AT, SHARED_BURST_DURATION, 0.08, 0.12, SHARED_FORCE_X, SHARED_FORCE_Y, SHARED_WOBBLE);
+
+      // 3) Bottom-left inward/upward burst.
+      emitBurst(elapsed, BOTTOM_LEFT_INJECT_AT, SHARED_BURST_DURATION, 0.08, 0.88, SHARED_FORCE_X, -SHARED_FORCE_Y, SHARED_WOBBLE);
+    }
 
     function updateFrame() {
       const now = Date.now();
       let dt = Math.min((now - lastUpdateTime) / 1000, 0.016666);
       lastUpdateTime = now;
 
-      // AUTOMATIC REVEAL: Push giant smoke from the left side initially
       const elapsed = (now - startTime) / 1000;
-      if (elapsed < 3.0) {
-        const xPos = 0.05;
-        const yPos = 0.5 + Math.sin(elapsed * 4.0) * 0.15; // sweeping up and down
-        // Very heavy force to push across the screen
-        splat(xPos, yPos, 80 * (3.0 - elapsed), Math.cos(elapsed * 6.0) * 40, { r: 1, g: 1, b: 1 });
-      }
+      injectSequence(elapsed);
 
-      applyInputs();
       step(dt);
       render(null);
-      animFrame = requestAnimationFrame(updateFrame);
-    }
 
-    function applyInputs() {
-      for (let p of pointers) {
-        if (p.moved) {
-          p.moved = false;
-          splat(p.texcoordX, p.texcoordY, p.deltaX * config.SPLAT_FORCE, p.deltaY * config.SPLAT_FORCE, p.color);
+      if (elapsed >= MIN_RUNTIME_BEFORE_SWITCH_SECONDS && now - lastCoverageCheckMs >= COVERAGE_CHECK_EVERY_MS) {
+        lastCoverageCheckMs = now;
+        if (isFrameFullyBlackEnough()) {
+          coveragePasses++;
+          if (coveragePasses >= REQUIRED_COVERAGE_PASSES) {
+            setIsComplete(true);
+            return;
+          }
+        } else {
+          coveragePasses = 0;
         }
       }
+
+      animFrame = requestAnimationFrame(updateFrame);
     }
 
     function step(dt: number) {
@@ -531,6 +609,8 @@ export default function InkReveal3() {
       gl!.enable(gl!.BLEND);
       displayMaterial.bind();
       gl!.uniform1i(displayMaterial.uniforms.uTexture, dye.read.attach(0));
+      gl!.uniform3f(displayMaterial.uniforms.uStartColor, startVec3[0], startVec3[1], startVec3[2]);
+      gl!.uniform3f(displayMaterial.uniforms.uInkColor, inkVec3[0], inkVec3[1], inkVec3[2]);
       blit(target, false);
     }
 
@@ -549,39 +629,6 @@ export default function InkReveal3() {
       blit(dye.write); dye.swap();
     }
 
-    updateFrame();
-
-    // Interaction handling
-    function updatePointerDown(pointer: Pointer, id: number, x: number, y: number) {
-      if (!canvasRef.current) return;
-      pointer.id = id; pointer.down = true; pointer.moved = false;
-      pointer.texcoordX = x / canvasRef.current.width; pointer.texcoordY = 1.0 - y / canvasRef.current.height;
-      pointer.prevTexcoordX = pointer.texcoordX; pointer.prevTexcoordY = pointer.texcoordY;
-      pointer.deltaX = 0; pointer.deltaY = 0;
-      pointer.color = generateColor();
-    }
-
-    function updatePointerMove(pointer: Pointer, x: number, y: number) {
-      if (!canvasRef.current) return;
-      pointer.prevTexcoordX = pointer.texcoordX; pointer.prevTexcoordY = pointer.texcoordY;
-      pointer.texcoordX = x / canvasRef.current.width; pointer.texcoordY = 1.0 - y / canvasRef.current.height;
-      let dx = pointer.texcoordX - pointer.prevTexcoordX;
-      let dy = pointer.texcoordY - pointer.prevTexcoordY;
-      const aspect = canvasRef.current.width / canvasRef.current.height;
-      if (aspect < 1) dx *= aspect; else dy /= aspect;
-      pointer.deltaX = dx; pointer.deltaY = dy;
-      pointer.moved = Math.abs(dx) > 0 || Math.abs(dy) > 0;
-    }
-
-    const mousemove = (e: MouseEvent) => updatePointerMove(pointers[0], e.clientX, e.clientY);
-    const mousedown = (e: MouseEvent) => {
-      updatePointerDown(pointers[0], -1, e.clientX, e.clientY);
-      splat(pointers[0].texcoordX, pointers[0].texcoordY, 10*(Math.random()-0.5), 30*(Math.random()-0.5), generateColor());
-    };
-    
-    window.addEventListener('mousemove', mousemove);
-    window.addEventListener('mousedown', mousedown);
-
     const onResize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -590,16 +637,21 @@ export default function InkReveal3() {
     window.addEventListener('resize', onResize);
     onResize();
 
+    // Start rendering only after first resize/init so the first injection is not wiped.
+    updateFrame();
+
     return () => {
       cancelAnimationFrame(animFrame);
-      window.removeEventListener('mousemove', mousemove);
-      window.removeEventListener('mousedown', mousedown);
       window.removeEventListener('resize', onResize);
     };
-  }, []);
+  }, [isComplete, inkVec3, startVec3, isMobilePortrait]);
+
+  if (isComplete) {
+    return <div style={{ position: 'fixed', inset: 0, zIndex: -1, background: inkHex }} />;
+  }
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1, pointerEvents: 'auto' }}>
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100dvh', zIndex: -1, pointerEvents: 'none' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }}></canvas>
     </div>
   );
