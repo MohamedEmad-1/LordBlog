@@ -61,15 +61,15 @@ export default defineConfig({
   },
   experimental: {
     preserveScriptOrder: true,
-    fonts: [
+      fonts: [
       {
-        name: "Google Sans Code",
-        cssVariable: "--font-google-sans-code",
+        name: "Playpen Sans",
+        cssVariable: "--font-playpen-sans",
         provider: fontProviders.google(),
-        fallbacks: ["monospace"],
-        weights: [300, 400, 500, 600, 700],
-        styles: ["normal", "italic"],
+        fallbacks: ["cursive"],
+        weights: [100, 200, 300, 400, 500, 600, 700, 800],
+        styles: ["normal"],
       },
-    ],
+    ]
   },
 });
