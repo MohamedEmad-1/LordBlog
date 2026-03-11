@@ -8,7 +8,7 @@ tags:
 description: Learn how to add LaTeX equations in Astro blog posts using Markdown, KaTeX, and remark/rehype plugins.
 ---
 
-This document demonstrates how to use LaTeX equations in your Markdown files for AstroPaper. LaTeX is a powerful typesetting system often used for mathematical and scientific documents.
+This document demonstrates how to use LaTeX equations in your Markdown files for Evelx Logs Of A Random Dev. LaTeX is a powerful typesetting system often used for mathematical and scientific documents.
 
 <figure>
   <img
@@ -24,7 +24,7 @@ This document demonstrates how to use LaTeX equations in your Markdown files for
 
 ## Instructions
 
-In this section, you will find instructions on how to add support for LaTeX in your Markdown files for AstroPaper.
+In this section, you will find instructions on how to add support for LaTeX in your Markdown files for Evelx Logs Of A Random Dev.
 
 1. Install the necessary remark and rehype plugins by running:
 

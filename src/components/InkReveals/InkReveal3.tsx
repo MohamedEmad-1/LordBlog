@@ -7,11 +7,36 @@ interface ColorRGB {
   b: number;
 }
 
-export default function InkReveal3() {
+type InkReveal3Props = {
+  zIndex?: number;
+  completionEventName?: string;
+  sessionSkipKey?: string;
+};
+
+export default function InkReveal3({ zIndex = -1, completionEventName = 'inkreveal3:complete', sessionSkipKey }: InkReveal3Props = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isComplete, setIsComplete] = useState(false);
-  const [isMobilePortrait, setIsMobilePortrait] = useState(false);
   const { startVec3, inkVec3, inkHex } = useThemeInkColors();
+  const [isComplete, setIsComplete] = useState<boolean>(() => {
+    if (!sessionSkipKey || typeof window === 'undefined') return false;
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    const isReload = navEntry?.type === 'reload';
+    if (isReload) {
+      sessionStorage.removeItem(sessionSkipKey);
+      return false;
+    }
+    return sessionStorage.getItem(sessionSkipKey) === '1';
+  });
+  const [isMobilePortrait, setIsMobilePortrait] = useState(false);
+
+  useEffect(() => {
+    if (!isComplete) return;
+    if (sessionSkipKey) {
+      sessionStorage.setItem(sessionSkipKey, '1');
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent(completionEventName));
+    }
+  }, [isComplete, completionEventName, sessionSkipKey]);
 
   // Hardcoded constants for optimal smoke reveal
   const SIM_RESOLUTION = 128;
@@ -647,11 +672,11 @@ export default function InkReveal3() {
   }, [isComplete, inkVec3, startVec3, isMobilePortrait]);
 
   if (isComplete) {
-    return <div style={{ position: 'fixed', inset: 0, zIndex: -1, background: inkHex }} />;
+    return <div style={{ position: 'fixed', inset: 0, zIndex, background: inkHex }} />;
   }
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100dvh', zIndex: -1, pointerEvents: 'none' }}>
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100dvh', zIndex, pointerEvents: 'none' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }}></canvas>
     </div>
   );

@@ -1,9 +1,9 @@
 export const SITE = {
-  website: "https://astro-ink.pages.dev/", // replace this with your deployed domain
+  website: "https://evelx.com/blog/", // replace this with your deployed domain
   author: "Mohamed Emad",
   profile: "https://evelx.com/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
-  title: "Astro Ink",
+  title: "Evelx Logs Of A Random Dev",
   ogImage: "astro-ink-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 4,
@@ -14,7 +14,7 @@ export const SITE = {
   editPost: {
     enabled: true,
     text: "Edit page",
-    url: "https://github.com/satnaing/astro-ink/edit/main/",
+    url: "https://github.com/MohamedEmad-1/edit/main/",
   },
   dynamicOgImage: true,
   dir: "ltr", // "rtl" | "auto"

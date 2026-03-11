@@ -81,11 +81,36 @@ const InkScene = ({ startVec3, inkVec3, isMobilePortrait }: { startVec3: [number
   return <mesh><planeGeometry args={[2, 2]} />{/* @ts-ignore */}<inkMaterial5 ref={materialRef} /></mesh>;
 };
 
-export default function InkReveal5() {
+type InkReveal5Props = {
+  zIndex?: number;
+  completionEventName?: string;
+  sessionSkipKey?: string;
+};
+
+export default function InkReveal5({ zIndex = -1, completionEventName = 'inkreveal5:complete', sessionSkipKey }: InkReveal5Props) {
   const { startVec3, inkVec3, inkHex } = useThemeInkColors();
-  const [isComplete, setIsComplete] = useState(false);
+  const [isComplete, setIsComplete] = useState<boolean>(() => {
+    if (!sessionSkipKey || typeof window === 'undefined') return false;
+
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    const isReload = navEntry?.type === 'reload';
+    if (isReload) {
+      sessionStorage.removeItem(sessionSkipKey);
+      return false;
+    }
+
+    return sessionStorage.getItem(sessionSkipKey) === '1';
+  });
   const [canvasEl, setCanvasEl] = useState<HTMLCanvasElement | null>(null);
   const [isMobilePortrait, setIsMobilePortrait] = useState(false);
+
+  useEffect(() => {
+    if (!isComplete) return;
+    if (sessionSkipKey) {
+      sessionStorage.setItem(sessionSkipKey, '1');
+    }
+    window.dispatchEvent(new CustomEvent(completionEventName));
+  }, [isComplete, completionEventName, sessionSkipKey]);
 
   useEffect(() => {
     const updateOrientation = () => {
@@ -176,11 +201,11 @@ export default function InkReveal5() {
   }, [canvasEl, isComplete, inkVec3]);
 
   if (isComplete) {
-    return <div style={{ position: 'fixed', inset: 0, zIndex: -1, background: inkHex }} />;
+    return <div style={{ position: 'fixed', inset: 0, zIndex, background: inkHex }} />;
   }
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100dvh', zIndex: -1 }}>
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100dvh', zIndex }}>
       <Canvas
         orthographic
         camera={{ position: [0, 0, 1], zoom: 1 }}

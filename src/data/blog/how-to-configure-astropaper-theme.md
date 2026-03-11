@@ -2,17 +2,17 @@
 author: Sat Naing
 pubDatetime: 2022-09-23T04:58:53Z
 modDatetime: 2026-01-10T13:04:53.851Z
-title: How to configure AstroPaper theme
-slug: how-to-configure-astropaper-theme
+title: How to configure Evelx Logs Of A Random Dev theme
+slug: how-to-configure-astro-ink-theme
 featured: true
 draft: false
 tags:
   - configuration
   - docs
-description: How you can make AstroPaper theme absolutely yours.
+description: How you can make Evelx Logs Of A Random Dev theme absolutely yours.
 ---
 
-AstroPaper is a highly customizable Astro blog theme. With AstroPaper, you can customize everything according to your personal taste. This article will explain how you can make some customizations easily in the config file.
+Evelx Logs Of A Random Dev is a highly customizable Astro blog theme. With Evelx Logs Of A Random Dev, you can customize everything according to your personal taste. This article will explain how you can make some customizations easily in the config file.
 
 ## Table of contents
 
@@ -24,12 +24,12 @@ During development, it's okay to leave `SITE.website` empty. But in production m
 
 ```js file=src/config.ts
 export const SITE = {
-  website: "https://astro-paper.pages.dev/", // replace this with your deployed domain
+  website: "https://astro-ink.pages.dev/", // replace this with your deployed domain
   author: "Sat Naing",
   profile: "https://satnaing.dev/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
-  title: "AstroPaper",
-  ogImage: "astropaper-og.jpg",
+  title: "Evelx Logs Of A Random Dev",
+  ogImage: "astro-ink-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 4,
@@ -39,7 +39,7 @@ export const SITE = {
   editPost: {
     enabled: true,
     text: "Suggest Changes",
-    url: "https://github.com/satnaing/astro-paper/edit/main/",
+    url: "https://github.com/MohamedEmad-1/edit/main/",
   },
   dynamicOgImage: true, // enable automatic dynamic og-image generation
   dir: "ltr", // "rtl" | "auto"
@@ -65,7 +65,7 @@ Here are SITE configuration options
 | `showArchives`        | Determines whether to display the `Archives` menu (positioned between the `About` and `Search` menus) and its corresponding page on the site. This option is set to `true` by default.                                                                                                                                                                                                                                            |
 | `showBackButton`      | Determines whether to display the `Go back` button in each blog post.                                                                                                                                                                                                                                                                                                                                                             |
 | `editPost`            | This option allows users to suggest changes to a blog post by providing an edit link under blog post titles. This feature can be disabled by setting `SITE.editPost.enabled` to `false`.                                                                                                                                                                                                                                          |
-| `dynamicOgImage`      | This option controls whether to [generate dynamic og-image](https://astro-paper.pages.dev/posts/dynamic-og-image-generation-in-astropaper-blog-posts/) if no `ogImage` is specified in the blog post frontmatter. If you have many blog posts, you might want to disable this feature. See the [trade-off](https://astro-paper.pages.dev/posts/dynamic-og-image-generation-in-astropaper-blog-posts/#trade-off) for more details. |
+| `dynamicOgImage`      | This option controls whether to [generate dynamic og-image](https://astro-ink.pages.dev/posts/dynamic-og-image-generation-in-astro-ink-blog-posts/) if no `ogImage` is specified in the blog post frontmatter. If you have many blog posts, you might want to disable this feature. See the [trade-off](https://astro-ink.pages.dev/posts/dynamic-og-image-generation-in-astro-ink-blog-posts/#trade-off) for more details. |
 | `dir`                 | Specifies the text direction of the entire blog. Used as [HTML dir attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/dir) in `<html dir="ltr">`. Supported values: `ltr` \| `rtl` \| `auto`                                                                                                                                                                                                |
 | `lang`                | Used as HTML ISO Language code in `<html lang"en">`. Default is `en`.                                                                                                                                                                                                                                                                                                                                                             |
 | `timezone`            | This option allows you to specify your timezone using the [IANA format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Setting this ensures consistent timestamps across your localhost and deployed site, eliminating time differences.                                                                                                                                                                          |
@@ -87,9 +87,9 @@ You can explore more `max-width` values in the [Tailwind CSS docs](https://tailw
 
 ## Configuring logo or title
 
-Prior to AstroPaper v5, you can update your site name/logo in `LOGO_IMAGE` object inside `src/config.ts` file. However, in AstroPaper v5, this option has been removed in favor of Astro's built-in SVG and Image components.
+Prior to Evelx Logs Of A Random Dev v5, you can update your site name/logo in `LOGO_IMAGE` object inside `src/config.ts` file. However, in Evelx Logs Of A Random Dev v5, this option has been removed in favor of Astro's built-in SVG and Image components.
 
-![An arrow pointing at the website logo](https://res.cloudinary.com/noezectz/v1663911318/astro-paper/AstroPaper-logo-config_goff5l.png)
+![An arrow pointing at the website logo](https://res.cloudinary.com/noezectz/v1663911318/astro-ink/Astro-Ink-logo-config_goff5l.png)
 
 There are 3 options you can do:
 
@@ -165,7 +165,7 @@ You can configure social links in `SOCIALS` object inside `constants.ts`.
 export const SOCIALS = [
   {
     name: "GitHub",
-    href: "https://github.com/satnaing/astro-paper",
+    href: "https://github.com/MohamedEmad-1",
     linkTitle: ` ${SITE.title} on GitHub`,
     icon: IconGitHub,
   },
@@ -198,7 +198,7 @@ You can configure share links in `SHARE_LINKS` object inside `src/constants.ts`.
 
 ## Configuring fonts
 
-AstroPaper uses Astro's [experimental fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/) with [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code) as the default font. This provides consistent typography across all platforms with automatic font optimizations including preloading and caching.
+Evelx Logs Of A Random Dev uses Astro's [experimental fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/) with [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code) as the default font. This provides consistent typography across all platforms with automatic font optimizations including preloading and caching.
 
 ### Using the default font
 
@@ -268,4 +268,4 @@ The `--font-app` variable is used throughout the theme via the `font-app` Tailwi
 
 ## Conclusion
 
-This is the brief specification of how you can customize this theme. You can customize more if you know some coding. For customizing styles, please read [this article](https://astro-paper.pages.dev/posts/customizing-astropaper-theme-color-schemes/). Thanks for reading.✌🏻
+This is the brief specification of how you can customize this theme. You can customize more if you know some coding. For customizing styles, please read [this article](https://astro-ink.pages.dev/posts/customizing-astro-ink-theme-color-schemes/). Thanks for reading.✌🏻

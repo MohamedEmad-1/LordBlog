@@ -12,9 +12,13 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import { SITE } from "./src/config";
 
+const siteUrl = new URL(SITE.website);
+const siteOrigin = siteUrl.origin;
+
 // https://astro.build/config
 export default defineConfig({
-  site: SITE.website,
+  site: siteOrigin,
+  base: "/blog",
   integrations: [
     react(),
     sitemap({

@@ -5,14 +5,30 @@ import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
+import { Image } from "astro:assets";
+import logoBlack from "@/assets/images/Logo-Black.png";
+import logoWhite from "@/assets/images/Logo-White.png";
 import LinkButton from "./LinkButton.astro";
 import { SITE } from "@/config";
 
+const base = import.meta.env.BASE_URL;
+const basePath = base.endsWith("/") ? base.slice(0, -1) : base;
+const withBase = (path: string) => {
+  const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+  return `${normalizedBase}${path.replace(/^\/+/, "")}`;
+};
 const { pathname } = Astro.url;
+
+const pathWithoutBase =
+  basePath && basePath !== "/" && pathname.startsWith(basePath)
+    ? pathname.slice(basePath.length) || "/"
+    : pathname;
 
 // Remove trailing slash from current pathname if exists
 const currentPath =
-  pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+  pathWithoutBase.endsWith("/") && pathWithoutBase !== "/"
+    ? pathWithoutBase.slice(0, -1)
+    : pathWithoutBase;
 
 const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());
@@ -37,16 +53,24 @@ const isActive = (path: string) => {
     id="top-nav-wrap"
     class:list={[
       "py-4 sm:py-6",
-      "border-b border-border",
-      "relative w-full bg-background",
+      "border-b border-border",      "relative w-full",
       "flex items-baseline justify-between sm:items-center",
     ]}
   >
     <a
-      href="/"
+      href={withBase("/")}
       class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
     >
-      {SITE.title}
+      <Image
+        src={logoBlack}
+        alt={SITE.title}
+        class="block w-20 object-contain sm:w-28 md:w-32 dark:hidden"
+      />
+      <Image
+        src={logoWhite}
+        alt={SITE.title}
+        class="hidden w-20 object-contain sm:w-28 md:w-32 dark:block"
+      />
     </a>
     <nav
       id="nav-menu"
@@ -72,17 +96,17 @@ const isActive = (path: string) => {
         ]}
       >
         <li class="col-span-2">
-          <a href="/posts" class:list={{ "active-nav": isActive("/posts") }}>
+          <a href={withBase("posts")} class:list={{ "active-nav": isActive("/posts") }}>
             Posts
           </a>
         </li>
         <li class="col-span-2">
-          <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
+          <a href={withBase("tags")} class:list={{ "active-nav": isActive("/tags") }}>
             Tags
           </a>
         </li>
         <li class="col-span-2">
-          <a href="/about" class:list={{ "active-nav": isActive("/about") }}>
+          <a href={withBase("about")} class:list={{ "active-nav": isActive("/about") }}>
             About
           </a>
         </li>
@@ -90,7 +114,7 @@ const isActive = (path: string) => {
           SITE.showArchives && (
             <li class="col-span-2">
               <LinkButton
-                href="/archives"
+                href={withBase("archives")}
                 class:list={[
                   "focus-outline flex justify-center p-3 sm:p-1",
                   {
@@ -108,7 +132,7 @@ const isActive = (path: string) => {
         }
         <li class="col-span-1 flex items-center justify-center">
           <LinkButton
-            href="/search"
+            href={withBase("search")}
             class:list={[
               "focus-outline flex p-3 sm:p-1",
               { "[&>svg]:stroke-accent": isActive("/search") },

@@ -8,19 +8,28 @@ type Props = {
 };
 
 const { tag, tagName, size = "lg" } = Astro.props;
+
+const hash = tagName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+const dropImages = ["drop1.png", "drop2.png", "drop3.png"];
+const randomDrop = dropImages[hash % dropImages.length];
+// We use an imported asset URL to ensure Vite bundles and hashes it correctly
+// BUT since we dynamically need the path in a CSS var, we can import them upfront
+import drop1 from "@/assets/images/drop1.png";
+import drop2 from "@/assets/images/drop2.png";
+import drop3 from "@/assets/images/drop3.png";
+const dropUrls = [drop1.src, drop2.src, drop3.src];
+const randomSplashUrl = `url('${dropUrls[hash % dropUrls.length]}')`;
+const dropScaleX = (hash % 2 === 0) ? -1 : 1;
 ---
 
-<li>
+<li class="tag-item" style={`--splash-svg: ${randomSplashUrl}; --splash-flip: ${dropScaleX};`}>
   <a
     href={`/tags/${tag}/`}
     transition:name={tag}
     class:list={[
-      "flex items-center gap-0.5",
-      "border-b-2 border-dashed border-foreground",
-      "hover:-mt-0.5 hover:border-accent hover:text-accent",
-      "focus-visible:border-none focus-visible:text-accent",
-      { "text-sm": size === "sm" },
-      { "text-lg": size === "lg" },
+      "tag-chip",
+      { "tag-chip--sm": size === "sm" },
+      { "tag-chip--lg": size === "lg" },
     ]}
   >
     <IconHash
@@ -33,3 +42,92 @@ const { tag, tagName, size = "lg" } = Astro.props;
     {tagName}
   </a>
 </li>
+
+<style>
+  .tag-item {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .tag-item:hover,
+  .tag-item:focus-within {
+    z-index: 10;
+  }
+
+  .tag-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.7rem;
+    padding: 0.35rem 0.7rem;
+    color: var(--color-foreground);
+    /* Glassy background */
+    background: color-mix(in srgb, var(--color-background) 70%, transparent);
+    backdrop-filter: blur(6px);
+    transition:
+      color 300ms ease,
+      background-color 300ms ease,
+      border-color 300ms ease,
+      transform 300ms ease;
+  }
+
+  .tag-chip::after {
+    content: "";
+    position: absolute;
+    /* Control the bounds of the image container here. Currently stretches far beyond the chip layout */
+    top: -350%; bottom: -350%; left: -245%; right: -245%;
+    background-color: var(--color-foreground);
+    -webkit-mask-image: var(--splash-svg);
+    mask-image: var(--splash-svg);
+    /* Contain ensures the image keeps its natural aspect ratio without stretching/distortion. */
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    opacity: 0;
+    transform: scaleX(var(--splash-flip)) scaleY(0.5);
+    transition: transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 300ms ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .tag-chip:hover,
+  .tag-chip:focus-visible {
+    /* Hide glassy frame */
+    background-color: transparent;
+    border-color: transparent;
+    backdrop-filter: none;
+    /* Invert text color over ink */
+    color: var(--color-background);
+    transform: translateY(-2px);
+  }
+
+  .tag-chip:hover::after,
+  .tag-chip:focus-visible::after {
+    opacity: 1;
+    transform: scaleX(var(--splash-flip)) scaleY(1);
+  }
+
+  .tag-chip--lg {
+    font-size: 1rem;
+  }
+
+  .tag-chip--sm {
+    font-size: 0.875rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tag-chip,
+    .tag-chip::after {
+      transition: none;
+    }
+    .tag-chip:hover,
+    .tag-chip:focus-visible {
+      transform: none;
+    }
+  }
+</style>

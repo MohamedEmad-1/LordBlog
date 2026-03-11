@@ -9,12 +9,6 @@ export type ThemeInkColors = {
   startVec3: [number, number, number];
 };
 
-// Keep these in sync with src/styles/global.css theme background tokens.
-const THEME_BG: Record<ThemeName, string> = {
-  light: '#fdfdfd',
-  dark: '#212737',
-};
-
 function clamp01(n: number): number {
   return Math.max(0, Math.min(1, n));
 }
@@ -60,23 +54,24 @@ function getThemeName(): ThemeName {
   return attr === 'dark' ? 'dark' : 'light';
 }
 
-function getActiveBackgroundVec3(theme: ThemeName): [number, number, number] {
-  if (typeof window === 'undefined') return hexToVec3(THEME_BG[theme]);
-  const cssValue = getComputedStyle(document.documentElement).getPropertyValue('--background').trim();
-  if (!cssValue) return hexToVec3(THEME_BG[theme]);
-  return cssColorToVec3(cssValue);
+function getCssVar(name: string, fallback: string): string {
+  if (typeof window === 'undefined') return fallback;
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return value || fallback;
 }
 
 function computeThemeInkColors(): ThemeInkColors {
   const theme = getThemeName();
-  const opposite: ThemeName = theme === 'dark' ? 'light' : 'dark';
-
-  const inkVec3 = getActiveBackgroundVec3(theme);
-  const startVec3 = hexToVec3(THEME_BG[opposite]);
+  const inkCss = getCssVar('--background', '#ffffff');
+  const startCss = theme === 'dark'
+    ? getCssVar('--theme-bg-light', '#ffffff')
+    : getCssVar('--theme-bg-dark', '#000000');
+  const inkVec3 = cssColorToVec3(inkCss);
+  const startVec3 = cssColorToVec3(startCss);
 
   return {
     inkHex: vec3ToHex(inkVec3),
-    startHex: THEME_BG[opposite],
+    startHex: vec3ToHex(startVec3),
     inkVec3,
     startVec3,
   };

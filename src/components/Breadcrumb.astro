@@ -1,6 +1,17 @@
 ---
+const BASE_URL = import.meta.env.BASE_URL;
+const normalizedBasePath = BASE_URL.endsWith("/")
+  ? BASE_URL.slice(0, -1)
+  : BASE_URL;
+
 // Remove current url path and remove trailing slash if exists
-const currentUrlPath = Astro.url.pathname.replace(/\/+$/, "");
+const pathnameWithoutBase =
+  normalizedBasePath &&
+  normalizedBasePath !== "/" &&
+  Astro.url.pathname.startsWith(normalizedBasePath)
+    ? Astro.url.pathname.slice(normalizedBasePath.length) || "/"
+    : Astro.url.pathname;
+const currentUrlPath = pathnameWithoutBase.replace(/\/+$/, "") || "/";
 
 // Get url array from path
 // eg: /tags/tailwindcss => ['tags', 'tailwindcss']
@@ -28,7 +39,7 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
     class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100"
   >
     <li>
-      <a href="/" class="opacity-80">Home</a>
+      <a href={BASE_URL} class="opacity-80">Home</a>
       <span aria-hidden="true" class="opacity-80">&raquo;</span>
     </li>
     {
@@ -45,7 +56,7 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
           </li>
         ) : (
           <li>
-            <a href={`/${breadcrumb}/`} class="capitalize opacity-70">
+            <a href={`${BASE_URL}${breadcrumb}/`} class="capitalize opacity-70">
               {breadcrumb}
             </a>
             <span aria-hidden="true">&raquo;</span>

@@ -3,17 +3,17 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+Evelx Logs Of A Random Dev is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
 
-![Astro Paper](public/astropaper-og.jpg)
+![Evelx Logs Of A Random Dev](public/astroink-og.png)
 
-AstroPaper provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
+Evelx Logs Of A Random Dev provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
 
-The blog posts in this theme also serve as guides, docs or example articles\_ making AstroPaper a flexible starting point for your next content-driven site.
+The blog posts in this theme also serve as guides, docs or example articles\_ making Evelx Logs Of A Random Dev a flexible starting point for your next content-driven site.
 
 ## Features
 
-AstroPaper comes with a set of useful features that make content publishing easy and effective:
+Evelx Logs Of A Random Dev comes with a set of useful features that make content publishing easy and effective:
 
 - SEO-friendly
 - Fast performance
@@ -28,10 +28,8 @@ and so much more.
 
 ## Show your support
 
-If you like [AstroPaper](https://github.com/satnaing/astro-paper), consider giving it a star ⭐️.
+If you like [Evelx Logs Of A Random Dev](https://github.com/MohamedEmad-1/astro-ink), consider giving it a star ⭐️.
 
-Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/satnaing/astro-paper/issues), submit a [pull request](https://github.com/satnaing/astro-paper/pulls) or start a [discussion](https://github.com/satnaing/astro-paper/discussions).
+Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/MohamedEmad-1/astro-ink/issues), submit a [pull request](https://github.com/MohamedEmad-1/astro-ink/pulls) or start a [discussion](https://github.com/MohamedEmad-1/astro-ink/discussions).
 
-If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
 
-Kyay zuu! 🙏🏼
