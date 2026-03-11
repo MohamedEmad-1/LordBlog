@@ -18,7 +18,7 @@ const siteOrigin = siteUrl.origin;
 // https://astro.build/config
 export default defineConfig({
   site: siteOrigin,
-  base: "/blog",
+  // base: "/blog",
   integrations: [
     react(),
     sitemap({
