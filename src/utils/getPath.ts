@@ -1,6 +1,21 @@
 import { BLOG_PATH } from "@/content.config";
 import { slugifyStr } from "./slugify";
 
+const BASE_URL = import.meta.env.BASE_URL;
+const normalizedBasePath = BASE_URL.endsWith("/")
+  ? BASE_URL.slice(0, -1)
+  : BASE_URL;
+
+const withBase = (path: string) => {
+  const normalizedPath = path.replace(/^\/+/, "");
+
+  if (!normalizedBasePath || normalizedBasePath === "/") {
+    return `/${normalizedPath}`;
+  }
+
+  return `${normalizedBasePath}/${normalizedPath}`;
+};
+
 /**
  * Get full path of a blog post
  * @param id - id of the blog post (aka slug)
@@ -21,11 +36,11 @@ export function getPath(
     .slice(0, -1) // remove the last segment_ file name_ since it's unnecessary
     .map(segment => slugifyStr(segment)); // slugify each segment path
 
-  const basePath = includeBase ? "/posts" : "";
+  const basePath = includeBase ? withBase("posts") : "";
 
   // Making sure `id` does not contain the directory
   const blogId = id.split("/");
-  const slug = blogId.length > 0 ? blogId.slice(-1) : blogId;
+  const slug = blogId.at(-1) ?? id;
 
   // If not inside the sub-dir, simply return the file path
   if (!pathSegments || pathSegments.length < 1) {

@@ -10,7 +10,7 @@ export async function GET() {
   return rss({
     title: SITE.title,
     description: SITE.desc,
-    site: SITE.website,
+    site: SITE.website.replace(/\/$/, ""),
     items: sortedPosts.map(({ data, id, filePath }) => ({
       link: getPath(id, filePath),
       title: data.title,
