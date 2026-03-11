@@ -12,6 +12,7 @@ type Props = {
 
 const { tag, tagName, size = "lg" } = Astro.props;
 const BASE_URL = import.meta.env.BASE_URL;
+const normalizedBaseUrl = BASE_URL.endsWith("/") ? BASE_URL : `${BASE_URL}/`;
 
 const hash = tagName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
 const dropUrls = [drop1.src, drop2.src, drop3.src];
@@ -21,7 +22,7 @@ const dropScaleX = (hash % 2 === 0) ? -1 : 1;
 
 <li class="tag-item" style={`--splash-svg: ${randomSplashUrl}; --splash-flip: ${dropScaleX};`}>
   <a
-    href={`${BASE_URL}tags/${tag}/`}
+    href={`${normalizedBaseUrl}tags/${tag}/`}
     transition:name={tag}
     class:list={[
       "tag-chip",
