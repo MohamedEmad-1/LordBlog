@@ -4,7 +4,7 @@
   "version": "5.5.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/ && node scripts/nest-dist.mjs",
+    "build": "astro check && astro build && pagefind --site dist/blog && node -e \"import{cpSync,existsSync,mkdirSync}from'node:fs';if(existsSync('dist/blog/pagefind')){mkdirSync('public/pagefind',{recursive:true});cpSync('dist/blog/pagefind','public/pagefind',{recursive:true})}\"",
     "preview": "astro preview",
     "sync": "astro sync",
     "astro": "astro",

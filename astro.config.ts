@@ -19,6 +19,7 @@ const siteOrigin = siteUrl.origin;
 export default defineConfig({
   site: siteOrigin,
   base: "/blog",
+  outDir: "dist/blog",
   integrations: [
     react(),
     sitemap({
