@@ -1,5 +1,8 @@
 ---
 import IconHash from "@/assets/icons/IconHash.svg";
+import drop1 from "@/assets/images/drop1.png";
+import drop2 from "@/assets/images/drop2.png";
+import drop3 from "@/assets/images/drop3.png";
 
 type Props = {
   tag: string;
@@ -11,13 +14,6 @@ const { tag, tagName, size = "lg" } = Astro.props;
 const BASE_URL = import.meta.env.BASE_URL;
 
 const hash = tagName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-const dropImages = ["drop1.png", "drop2.png", "drop3.png"];
-const randomDrop = dropImages[hash % dropImages.length];
-// We use an imported asset URL to ensure Vite bundles and hashes it correctly
-// BUT since we dynamically need the path in a CSS var, we can import them upfront
-import drop1 from "@/assets/images/drop1.png";
-import drop2 from "@/assets/images/drop2.png";
-import drop3 from "@/assets/images/drop3.png";
 const dropUrls = [drop1.src, drop2.src, drop3.src];
 const randomSplashUrl = `url('${dropUrls[hash % dropUrls.length]}')`;
 const dropScaleX = (hash % 2 === 0) ? -1 : 1;
