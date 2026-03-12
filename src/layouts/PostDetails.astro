@@ -35,9 +35,10 @@ const {
   hideEditPost,
 } = post.data;
 
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 let ogImageUrl: string | undefined;
+const tocHeadings = headings.filter((h) => h.depth > 1 && h.depth < 4 && h.text.toLowerCase() !== "table of contents" && h.text.toLowerCase() !== "contents");
 
 // Determine OG image source
 if (typeof initOgImage === "string") {
@@ -90,10 +91,36 @@ const nextPost =
     class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
     data-pagefind-body
   >
-    <h1
-      transition:name={slugifyStr(title.replaceAll(".", "-"))}
-      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
-    >
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 relative w-full lg:items-stretch">
+      {/* --- Sidebar TOC --- */}
+      {
+        tocHeadings.length > 0 && (
+          <div class="hidden lg:block w-64 flex-shrink-0 border-r border-dashed border-border/80 pr-8">
+            <aside class="sticky top-24 pt-2 bg-background/90 max-h-[calc(100vh-6rem)] overflow-y-auto z-10 custom-scrollbar">
+              <h2 class="text-lg font-bold mb-4 tracking-wider uppercase text-accent border-b border-border pb-2">Contents</h2>
+              <ul class="flex flex-col gap-3 text-sm">
+                {tocHeadings.map((heading) => (
+                  <li class={`heading-depth-${heading.depth} ${heading.depth === 3 ? "ml-4 text-xs opacity-80" : "font-medium opacity-90 shadow-sm"}`}>
+                    <a
+                      href={`#${heading.slug}`}
+                      class="block text-foreground hover:text-accent hover:underline transition-colors"
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          </div>
+        )
+      }
+
+      {/* --- Main Article Area --- */}
+      <div class="flex-1 min-w-0 max-w-full">
+        <h1
+          transition:name={slugifyStr(title.replaceAll(".", "-"))}
+          class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+        >
       {title}
     </h1>
     <div class="my-2 flex items-center gap-2">
@@ -107,9 +134,43 @@ const nextPost =
       >
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
     </div>
+
+    {/* --- Mobile TOC --- */}
+    {
+      tocHeadings.length > 0 && (
+        <nav class="block lg:hidden mt-6 mb-2">
+          <details class="group rounded-lg border border-border bg-transparent">
+            <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-semibold text-accent transition-colors hover:bg-background/50">
+              Contents
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 transition-transform group-open:rotate-180"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </summary>
+            <ul class="flex flex-col gap-3 px-4 pb-4 pt-2 text-sm">
+              {tocHeadings.map((heading) => (
+                <li class={`heading-depth-${heading.depth} ${heading.depth === 3 ? "ml-4 text-xs opacity-80" : "font-medium opacity-90 shadow-sm"}`}>
+                  <a
+                    href={`#${heading.slug}`}
+                    class="block text-foreground hover:text-accent hover:underline transition-colors"
+                  >
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </nav>
+      )
+    }
+
     <article
       id="article"
-      class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+      class="app-prose mt-8 w-full max-w-full prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     >
       <Content />
     </article>
@@ -158,6 +219,7 @@ const nextPost =
           </a>
         )
       }
+    </div>
     </div>
   </main>
   <Footer />

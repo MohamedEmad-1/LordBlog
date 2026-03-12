@@ -14,7 +14,7 @@ description: New feature in Evelx Logs Of A Random Dev v1.4.0, introducing dynam
 
 New feature in Evelx Logs Of A Random Dev v1.4.0, introducing dynamic OG image generation for blog posts.
 
-## Table of contents
+
 
 ## Intro
 

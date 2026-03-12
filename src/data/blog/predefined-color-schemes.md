@@ -17,7 +17,7 @@ I've crafted some predefined color schemes for this Evelx Logs Of A Random Dev b
 
 If you don't know how you can configure color schemes, check [this blog post](https://astro-ink.pages.dev/posts/customizing-astro-ink-theme-color-schemes/).
 
-## Table of contents
+
 
 ## Light color schemes
 

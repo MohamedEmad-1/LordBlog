@@ -15,7 +15,7 @@ Updating the dependencies of a project can be tedious. However, neglecting to up
 
 ![Forrest Gump Fake Quote](@/assets/images/forrest-gump-quote.png)
 
-## Table of contents
+
 
 ## Updating Package Dependencies
 

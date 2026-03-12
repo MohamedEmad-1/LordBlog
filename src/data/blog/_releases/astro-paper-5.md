@@ -13,7 +13,7 @@ At last, the long-awaited Astro Paper v5 is finally here. Astro Paper v5 keeps t
 
 ![Astro Paper v5](@/assets/images/AstroPaper-v5.png)
 
-## Table of contents
+
 
 ## Major Changes
 

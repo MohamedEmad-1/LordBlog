@@ -25,7 +25,7 @@ Here are some rules/recommendations, tips & ticks for creating new posts in Evel
   </figcaption>
 </figure>
 
-## Table of contents
+
 
 ## Creating a Blog Post
 
@@ -136,7 +136,7 @@ For instance, if you want to place your table of contents just under the intro p
 Here are some recommendations, tips & ticks for creating new posts in Evelx Logs Of A Random Dev blog theme.
 
 <!-- [!code ++] -->
-## Table of contents
+
 
 <!-- the rest of the post -->
 ```

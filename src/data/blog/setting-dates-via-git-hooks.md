@@ -14,7 +14,7 @@ description: How to use Git Hooks to set your Created and Modified Dates on Evel
 
 In this post I will explain how to use the pre-commit Git hook to automate the input of the created (`pubDatetime`) and modified (`modDatetime`) in the Evelx Logs Of A Random Dev blog theme frontmatter
 
-## Table of contents
+
 
 ## Have them Everywhere
 
