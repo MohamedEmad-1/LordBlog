@@ -49,7 +49,7 @@ const scrollTargetId =
           The technical diary of Evelx. Exploring the intersection of luxury design, modern frameworks, and the hardware that powers them. Whether it’s comparing the latest dev environments or stress-testing new silicon, Lord goes beyond the agency work to provide raw reviews and random logs. Premium builds, honest gear talk, zero fluff.
           <a
             target="_blank"
-            href={`${BASE_URL}rss.xml`}
+            href={`${BASE_URL.endsWith("/") ? BASE_URL : BASE_URL + "/"}rss.xml`}
             class="hero-rss"
             aria-label="rss feed"
             title="RSS Feed"
@@ -112,7 +112,7 @@ const scrollTargetId =
     }
 
     <div class="my-8 text-center">
-      <LinkButton href={`${BASE_URL}posts/`}>
+      <LinkButton href={`${BASE_URL.endsWith("/") ? BASE_URL : BASE_URL + "/"}posts/`}>
         All Posts
         <IconArrowRight class="inline-block rtl:-rotate-180" />
       </LinkButton>

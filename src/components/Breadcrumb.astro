@@ -56,7 +56,7 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
           </li>
         ) : (
           <li>
-            <a href={`${BASE_URL}${breadcrumb}/`} class="capitalize opacity-70">
+            <a href={`${BASE_URL.endsWith("/") ? BASE_URL : BASE_URL + "/"}${breadcrumb}/`} class="capitalize opacity-70">
               {breadcrumb}
             </a>
             <span aria-hidden="true">&raquo;</span>
