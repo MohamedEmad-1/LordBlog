@@ -5,7 +5,7 @@ modDatetime: 2025-03-12T13:39:20.763Z
 title: Dynamic OG image generation in Evelx Logs Of A Random Dev blog posts
 slug: dynamic-og-image-generation-in-astro-ink-blog-posts
 featured: false
-draft: false
+draft: true
 tags:
   - docs
   - release

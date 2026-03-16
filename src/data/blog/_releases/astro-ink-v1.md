@@ -3,6 +3,7 @@ pubDatetime: 2023-03-08T08:00:00.000Z
 title: Evelx Logs Of A Random Dev V1
 slug: astro-ink-v1
 featured: false
+draft: true
 ogImage: ../../../assets/images/ASTRO-INK V1.0.png
 tags:
   - release

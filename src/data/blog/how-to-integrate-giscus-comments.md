@@ -5,7 +5,7 @@ modDatetime: 2025-03-12T12:28:53Z
 title: How to integrate Giscus comments into Evelx Logs Of A Random Dev
 slug: how-to-integrate-giscus-comments
 featured: false
-draft: false
+draft: true
 tags:
   - astro
   - blog

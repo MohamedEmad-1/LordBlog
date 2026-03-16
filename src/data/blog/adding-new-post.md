@@ -5,7 +5,7 @@ modDatetime: 2025-06-13T16:52:45.934Z
 title: Adding new posts in Evelx Logs Of A Random Dev theme
 slug: adding-new-posts-in-astro-ink-theme
 featured: true
-draft: false
+draft: true
 tags:
   - docs
 description:

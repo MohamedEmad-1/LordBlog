@@ -4,7 +4,7 @@ export const SITE = {
   profile: "https://evelx.com/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
   title: "Evelx Logs Of A Random Dev",
-  ogImage: "astro-ink-og.jpg",
+  ogImage: "astroink-og.png",
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 10,

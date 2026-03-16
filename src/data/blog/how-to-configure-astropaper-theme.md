@@ -5,7 +5,7 @@ modDatetime: 2026-01-10T13:04:53.851Z
 title: How to configure Evelx Logs Of A Random Dev theme
 slug: how-to-configure-astro-ink-theme
 featured: true
-draft: false
+draft: true
 tags:
   - configuration
   - docs
