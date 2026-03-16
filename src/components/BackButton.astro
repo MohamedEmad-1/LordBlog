@@ -21,13 +21,32 @@ import { SITE } from "@/config";
 
 <script>
   /* Update Search Praam */
+  const fallbackBackUrl = import.meta.env.BASE_URL || "/";
+
+  function normalizeBackUrl(rawValue: string | null) {
+    if (!rawValue) return fallbackBackUrl;
+
+    try {
+      const parsed = new URL(rawValue, window.location.origin);
+
+      // Never navigate to another origin via stored session value.
+      if (parsed.origin !== window.location.origin) {
+        return fallbackBackUrl;
+      }
+
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch {
+      return rawValue.startsWith("/") ? rawValue : fallbackBackUrl;
+    }
+  }
+
   function updateGoBackUrl() {
     const backButton: HTMLAnchorElement | null =
       document.querySelector("#back-button");
 
-    const backUrl = sessionStorage.getItem("backUrl");
+    const backUrl = normalizeBackUrl(sessionStorage.getItem("backUrl"));
 
-    if (backUrl && backButton) {
+    if (backButton) {
       backButton.href = backUrl;
     }
   }

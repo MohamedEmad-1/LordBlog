@@ -2,7 +2,7 @@
 author: Mohamed Emad
 pubDatetime: 2026-03-16T10:40:00Z
 modDatetime: null
-title: Software Review: Cursor vs VS Code - Is the AI Editor Actually Worth It
+title: "Software Review: Cursor vs VS Code - Is the AI Editor Actually Worth It"
 featured: false
 draft: false
 tags:
