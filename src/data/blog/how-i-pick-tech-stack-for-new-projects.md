@@ -26,7 +26,7 @@ Then I shipped a small marketing site and spent disproportionate time on deploym
 
 These methods optimize for comfort or hype, not project outcomes.
 
-## Informative Data
+## Key Facts
 
 ### The right early questions
 

@@ -36,7 +36,7 @@ timezone: Asia/Bangkok
 
 <Brief explanation of the problem it solves>
 
-## Informative Data
+## Key Facts
 
 - Language or ecosystem: <name>
 - Installation: <command>

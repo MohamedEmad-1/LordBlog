@@ -22,7 +22,7 @@ The technical migration is only half the story. The human migration is the hard 
 
 The trigger was not one catastrophic issue. It was cumulative friction: admin overhead, workflow complexity for non-technical users, and a mismatch between tool depth and what the team actually used.
 
-## Informative Data
+## Key Facts
 
 ### Migration scope
 

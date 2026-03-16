@@ -40,7 +40,7 @@ timezone: Asia/Bangkok
 
 <Describe the tools, their audience, and why they are compared>
 
-## Informative Data
+## Key Facts
 
 | Criteria | Tool A | Tool B |
 | --- | --- | --- |

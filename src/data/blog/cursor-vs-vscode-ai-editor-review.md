@@ -24,7 +24,7 @@ Cursor is not just a plugin. It is a VS Code fork where AI is integrated into co
 
 That matters, because the product is designed around agent-like editing and repo-wide context behavior, not just line completion.
 
-## Informative Data
+## Key Facts
 
 ### Core difference from classic autocomplete
 

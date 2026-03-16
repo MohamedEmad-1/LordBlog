@@ -52,7 +52,7 @@ timezone: Asia/Bangkok
 
 <Explain what is being discussed, who it is for, and why it matters>
 
-## Informative Data
+## Key Facts
 
 Use this section when the topic includes products, tools, hardware, software, or technical implementation details.
 

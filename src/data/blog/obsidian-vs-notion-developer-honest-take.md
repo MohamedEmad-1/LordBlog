@@ -28,7 +28,7 @@ Obsidian is a thinking and knowledge tool. It is strong at personal note network
 
 If you compare them as if they are clones, you will probably choose wrong.
 
-## Informative Data
+## Key Facts
 
 ### Ownership model
 

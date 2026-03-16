@@ -36,7 +36,7 @@ timezone: Asia/Bangkok
 
 <Who should buy which one in one paragraph>
 
-## Informative Data
+## Key Facts
 
 | Criteria | Option A | Option B |
 | --- | --- | --- |

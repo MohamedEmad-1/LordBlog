@@ -24,7 +24,7 @@ Astro is content-first by design. It is optimized for pages where the main value
 
 They are not direct substitutes. They solve different default problems.
 
-## Informative Data
+## Key Facts
 
 - Next.js default model: React runtime on the client plus server features.
 - Astro default model: zero JavaScript shipped unless you opt in.

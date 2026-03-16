@@ -36,7 +36,7 @@ timezone: Asia/Bangkok
 
 <Summarize the announcement or event clearly>
 
-## Informative Data
+## Key Facts
 
 - Company: <name>
 - Product or platform: <name>

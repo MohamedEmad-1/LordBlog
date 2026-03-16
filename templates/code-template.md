@@ -36,7 +36,7 @@ timezone: Asia/Bangkok
 
 <What is broken, slow, hard, or unclear>
 
-## Informative Data
+## Key Facts
 
 - Language or framework: <name>
 - Environment or version: <value>

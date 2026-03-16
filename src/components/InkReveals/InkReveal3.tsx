@@ -18,13 +18,20 @@ export default function InkReveal3({ zIndex = -1, completionEventName = 'inkreve
   const { startVec3, inkVec3, inkHex } = useThemeInkColors();
   const [isComplete, setIsComplete] = useState<boolean>(() => {
     if (!sessionSkipKey || typeof window === 'undefined') return false;
+    
+    // Check sessionStorage first (covers both normal nav and Astro transitions)
+    const stored = sessionStorage.getItem(sessionSkipKey) === '1';
+    if (stored) return true;
+    
+    // Only clear on full page reload (not on Astro transitions)
     const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
     const isReload = navEntry?.type === 'reload';
     if (isReload) {
       sessionStorage.removeItem(sessionSkipKey);
       return false;
     }
-    return sessionStorage.getItem(sessionSkipKey) === '1';
+    
+    return false;
   });
   const [isMobilePortrait, setIsMobilePortrait] = useState(false);
 

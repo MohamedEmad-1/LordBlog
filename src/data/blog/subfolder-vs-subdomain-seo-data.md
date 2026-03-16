@@ -18,7 +18,7 @@ Everyone has an opinion on subfolder vs subdomain. Very few people show numbers.
 
 I had to make this decision for my own blog, and I got tired of reading "it depends" with no commitment. So I looked at real cases and then paid the technical migration cost myself.
 
-## Informative Data
+## Key Facts
 
 ### Known case studies people keep citing
 

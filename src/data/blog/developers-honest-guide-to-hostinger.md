@@ -20,7 +20,7 @@ Then you try to deploy a modern stack with subfolder routing, edge redirects, an
 
 This is not a hate post. It is a realistic one.
 
-## Informative Data
+## Key Facts
 
 ### What Business shared hosting typically means
 

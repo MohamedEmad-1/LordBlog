@@ -20,7 +20,7 @@ Pages, Workers, R2, D1, KV, Analytics, and Tunnels all looked like separate prod
 
 Honestly, I was surprised.
 
-## Informative Data
+## Key Facts
 
 ### Pages
 

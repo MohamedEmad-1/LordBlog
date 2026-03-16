@@ -41,7 +41,7 @@ timezone: Asia/Bangkok
 
 <Explain the product, target user, pricing model, supported platforms, and main use cases>
 
-## Informative Data
+## Key Facts
 
 - Developer or company: <name>
 - Platform support: <Windows/macOS/Linux/Web/Mobile>
