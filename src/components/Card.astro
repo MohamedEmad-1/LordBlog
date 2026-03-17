@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { slugifyStr } from "@/utils/slugify";
 import { getPath } from "@/utils/getPath";
+import { getTransitionName } from "@/utils/getTransitionName";
 import Datetime from "./Datetime.astro";
 
 type Props = {
@@ -23,7 +23,7 @@ const { title, description, ...props } = data;
     ]}
   >
     <Heading
-      style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+      style={{ viewTransitionName: getTransitionName(title) }}
     >
       {title}
     </Heading>

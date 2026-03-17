@@ -1,0 +1,59 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE } from "@/config";
+import { getTransitionName } from "@/utils/getTransitionName";
+
+const posts = await getCollection("blog", ({ data }) => !data.draft);
+
+// Group posts by their computed transition name
+const transitionMap = new Map<string, string[]>();
+for (const post of posts) {
+  const name = getTransitionName(post.data.title);
+  const existing = transitionMap.get(name) ?? [];
+  existing.push(post.data.title);
+  transitionMap.set(name, existing);
+}
+
+// Keep only entries with duplicates
+const duplicates = [...transitionMap.entries()].filter(
+  ([, titles]) => titles.length > 1
+);
+---
+
+<Layout title={`Warnings | ${SITE.title}`}>
+  <Header />
+  <main id="main-content" class="app-layout pb-12 mt-8">
+    <h1 class="text-2xl font-bold sm:text-3xl">Post Warnings</h1>
+    <p class="mt-2 mb-8 italic opacity-75">
+      Duplicate titles will break view-transition animations. Rename one of the
+      conflicting posts to fix.
+    </p>
+
+    {duplicates.length === 0 ? (
+      <div class="rounded-lg border border-green-500/40 bg-green-500/10 p-6 text-center">
+        <span class="text-lg font-semibold text-green-600 dark:text-green-400">
+          All clear — no duplicate titles found.
+        </span>
+      </div>
+    ) : (
+      <ul class="flex flex-col gap-6">
+        {duplicates.map(([transitionName, titles]) => (
+          <li class="rounded-lg border border-red-500/40 bg-red-500/10 p-4">
+            <p class="font-semibold text-red-600 dark:text-red-400">
+              Collision on transition name: <code class="text-sm">{transitionName}</code>
+            </p>
+            <ul class="mt-2 list-disc list-inside">
+              {titles.map(t => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    )}
+  </main>
+  <Footer />
+</Layout>
