@@ -89,22 +89,22 @@ const nextPost =
   <BackButton />
   <main
     id="main-content"
-    class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
+    class:list={["app-layout overflow-x-clip pb-12", { "mt-8": !SITE.showBackButton }]}
     data-pagefind-body
   >
-    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 relative w-full lg:items-stretch">
+    <div class="relative flex w-full max-w-full flex-col gap-8 overflow-x-clip lg:flex-row lg:items-stretch lg:gap-12">
       {/* --- Sidebar TOC --- */}
       {
         tocHeadings.length > 0 && (
           <div class="hidden lg:block w-64 flex-shrink-0 border-r border-dashed border-border/80 pr-8">
             <aside class="sticky top-24 pt-2 bg-background/90 max-h-[calc(100vh-6rem)] overflow-y-auto z-10 custom-scrollbar">
               <h2 class="text-lg font-bold mb-4 tracking-wider uppercase text-accent border-b border-border pb-2">Contents</h2>
-              <ul class="flex flex-col gap-3 text-sm">
+              <ul class="min-w-0 flex flex-col gap-3 text-sm">
                 {tocHeadings.map((heading) => (
-                  <li class={`heading-depth-${heading.depth} ${heading.depth === 3 ? "ml-4 text-xs opacity-80" : "font-medium opacity-90 shadow-sm"}`}>
+                  <li class={`heading-depth-${heading.depth} min-w-0 ${heading.depth === 3 ? "ml-4 text-xs opacity-80" : "font-medium opacity-90 shadow-sm"}`}>
                     <a
                       href={`#${heading.slug}`}
-                      class="block text-foreground hover:text-accent hover:underline transition-colors"
+                      class="block min-w-0 break-words text-foreground transition-colors hover:text-accent hover:underline"
                     >
                       {heading.text}
                     </a>
@@ -139,8 +139,8 @@ const nextPost =
     {/* --- Mobile TOC --- */}
     {
       tocHeadings.length > 0 && (
-        <nav class="block lg:hidden mt-6 mb-2">
-          <details class="group rounded-lg border border-border bg-transparent">
+        <nav class="mt-6 mb-2 block w-full max-w-full overflow-x-hidden lg:hidden">
+          <details class="group w-full max-w-full overflow-hidden rounded-lg border border-border bg-transparent">
             <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-semibold text-accent transition-colors hover:bg-background/50">
               Contents
               <svg
@@ -152,12 +152,12 @@ const nextPost =
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </summary>
-            <ul class="flex flex-col gap-3 px-4 pb-4 pt-2 text-sm">
+            <ul class="min-w-0 flex flex-col gap-3 px-4 pb-4 pt-2 text-sm">
               {tocHeadings.map((heading) => (
-                <li class={`heading-depth-${heading.depth} ${heading.depth === 3 ? "ml-4 text-xs opacity-80" : "font-medium opacity-90 shadow-sm"}`}>
+                <li class={`heading-depth-${heading.depth} min-w-0 ${heading.depth === 3 ? "ml-4 text-xs opacity-80" : "font-medium opacity-90 shadow-sm"}`}>
                   <a
                     href={`#${heading.slug}`}
-                    class="block text-foreground hover:text-accent hover:underline transition-colors"
+                    class="block min-w-0 break-words text-foreground transition-colors hover:text-accent hover:underline"
                   >
                     {heading.text}
                   </a>
@@ -171,7 +171,7 @@ const nextPost =
 
     <article
       id="article"
-      class="app-prose mt-8 w-full max-w-full prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+      class="app-prose mt-8 w-full max-w-full overflow-x-clip prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     >
       <Content />
     </article>
